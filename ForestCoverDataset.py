@@ -35,7 +35,7 @@ class ForestCoverDataset(torch.utils.data.Dataset):
             blue_band = src.read(3)
 
             # Combine the bands into one rgb image
-            rgb_array = np.array([red_band, green_band, blue_band])
+            rgb_array = np.array([red_band, green_band, blue_band], dtype=np.float32)
             image = clip_and_normalize_image(
                 rgb_array, self.min_band_value, self.max_band_value)
 
