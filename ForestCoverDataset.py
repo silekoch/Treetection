@@ -4,7 +4,7 @@ import rasterio
 import numpy as np
 
 class ForestCoverDataset(torch.utils.data.Dataset):
-    def __init__(self, data_dir='data/AMAZON', mode='train', one_hot_masks=False):
+    def __init__(self, data_dir='data/AMAZON', mode='train', one_hot_masks=False, overfitting_mode=None):
         if mode not in ['train', 'val', 'test']:
             raise ValueError('Invalid mode')
         
@@ -24,7 +24,12 @@ class ForestCoverDataset(torch.utils.data.Dataset):
 
         self.one_hot_masks = one_hot_masks
 
-        self.image_paths = get_file_paths(self.image_dir)
+        if overfitting_mode == 'sample':
+            self.image_paths = get_file_paths(self.image_dir)[:1]
+        elif overfitting_mode == 'batch':
+            self.image_paths = get_file_paths(self.image_dir)[:16]
+        else:
+            self.image_paths = get_file_paths(self.image_dir)
     
     def __getitem__(self, i):
         image_path = self.image_paths[i]
