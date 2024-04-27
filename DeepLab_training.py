@@ -1,8 +1,5 @@
-import segmentation_models_pytorch as smp
 from ForestCoverDataset import ForestCoverDataset
 import torch
-import os
-from segmentation_models_pytorch.encoders import get_preprocessing_fn
 import pytorch_lightning as pl
 from DeepLab import TreepLab
 
