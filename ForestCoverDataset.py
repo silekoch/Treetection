@@ -35,7 +35,7 @@ class ForestCoverDataset(torch.utils.data.Dataset):
             blue_band = src.read(3)
 
             # Combine the bands into one rgb image
-            rgb_array = np.array([red_band, green_band, blue_band]).transpose(1, 2, 0)
+            rgb_array = np.array([red_band, green_band, blue_band])
             image = clip_and_normalize_image(
                 rgb_array, self.min_band_value, self.max_band_value)
 
@@ -49,6 +49,10 @@ class ForestCoverDataset(torch.utils.data.Dataset):
             mask = np.expand_dims(mask, axis=0)
 
         return image, mask
-        
+
+    def get_item_HWC(self, i):
+        image, mask = self.__getitem__(i)
+        return image.transpose(1, 2, 0), mask
+
     def __len__(self):
         return len(self.image_paths)
