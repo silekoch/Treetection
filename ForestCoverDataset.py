@@ -26,6 +26,8 @@ class ForestCoverDataset(torch.utils.data.Dataset):
 
         if overfitting_mode == 'sample':
             self.image_paths = get_file_paths(self.image_dir)[:1]
+        if overfitting_mode == '2sample':
+            self.image_paths = get_file_paths(self.image_dir)[:2]
         elif overfitting_mode == 'batch':
             self.image_paths = get_file_paths(self.image_dir)[:16]
         else:
