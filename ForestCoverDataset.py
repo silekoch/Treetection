@@ -1,10 +1,10 @@
 import torch
-from utils import get_file_paths, clip_and_normalize_image
+from utils import get_file_paths, clip_and_normalize_image, one_hot_encode
 import rasterio
 import numpy as np
 
 class ForestCoverDataset(torch.utils.data.Dataset):
-    def __init__(self, data_dir='data/AMAZON', mode='train'):
+    def __init__(self, data_dir='data/AMAZON', mode='train', one_hot_masks=True):
         if mode not in ['train', 'val', 'test']:
             raise ValueError('Invalid mode')
         
@@ -21,6 +21,8 @@ class ForestCoverDataset(torch.utils.data.Dataset):
         # TODO replace by scan across all files and percentile
         self.min_band_value = 0
         self.max_band_value = 2000
+
+        self.one_hot_masks = one_hot_masks
 
         self.image_paths = get_file_paths(self.image_dir)
     
@@ -40,6 +42,9 @@ class ForestCoverDataset(torch.utils.data.Dataset):
         mask_path = self.mask_dir + '/' + image_path.split('/')[-1]
         with rasterio.open(mask_path) as src:
             mask = np.array(src.read(1), dtype=np.float32)
+
+        if self.one_hot_masks:
+            mask = one_hot_encode(mask)
 
         return image, mask
         
