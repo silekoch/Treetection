@@ -4,7 +4,7 @@ import rasterio
 import numpy as np
 
 class ForestCoverDataset(torch.utils.data.Dataset):
-    def __init__(self, data_dir='data/AMAZON', mode='train', one_hot_masks=True):
+    def __init__(self, data_dir='data/AMAZON', mode='train', one_hot_masks=False):
         if mode not in ['train', 'val', 'test']:
             raise ValueError('Invalid mode')
         
@@ -45,6 +45,8 @@ class ForestCoverDataset(torch.utils.data.Dataset):
 
         if self.one_hot_masks:
             mask = one_hot_encode(mask)
+        else:
+            mask = np.expand_dims(mask, axis=0)
 
         return image, mask
         
