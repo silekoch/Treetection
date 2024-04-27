@@ -18,9 +18,9 @@ class ForestCoverDataset(torch.utils.data.Dataset):
             self.image_dir = data_dir + '/Training/image'
             self.mask_dir = data_dir + '/Training/mask'
 
-        # TODO replace by scan across all files
+        # TODO replace by scan across all files and percentile
         self.min_band_value = 0
-        self.max_band_value = 27200
+        self.max_band_value = 2000
 
         self.image_paths = get_file_paths(self.image_dir)
     
