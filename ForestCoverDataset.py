@@ -1,5 +1,5 @@
 import torch
-from utils import get_file_paths, normalize_image
+from utils import get_file_paths, clip_and_normalize_image
 import rasterio
 import numpy as np
 
@@ -34,7 +34,8 @@ class ForestCoverDataset(torch.utils.data.Dataset):
 
             # Combine the bands into one rgb image
             rgb_array = np.array([red_band, green_band, blue_band]).transpose(1, 2, 0)
-            image = normalize_image(rgb_array, self.min_band_value, self.max_band_value)
+            image = clip_and_normalize_image(
+                rgb_array, self.min_band_value, self.max_band_value)
 
         mask_path = self.mask_dir + '/' + image_path.split('/')[-1]
         with rasterio.open(mask_path) as src:
