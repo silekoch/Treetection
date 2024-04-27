@@ -38,7 +38,7 @@ class ForestCoverDataset(torch.utils.data.Dataset):
 
         mask_path = self.mask_dir + '/' + image_path.split('/')[-1]
         with rasterio.open(mask_path) as src:
-            mask = src.read(1)
+            mask = np.array(src.read(1), dtype=np.float32)
 
         return image, mask
         
