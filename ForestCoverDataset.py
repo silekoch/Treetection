@@ -51,7 +51,7 @@ class ForestCoverDataset(torch.utils.data.Dataset):
             mask = np.array(src.read(1), dtype=np.float32)
 
         if self.one_hot_masks:
-            mask = one_hot_encode(mask)
+            mask = one_hot_encode(mask).transpose(2, 0, 1)
         else:
             mask = np.expand_dims(mask, axis=0)
 
