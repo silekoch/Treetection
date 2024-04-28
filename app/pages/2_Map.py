@@ -1,5 +1,6 @@
 import streamlit as st
 import leafmap.foliumap as leafmap
+# import leafmap
 
 st.set_page_config(layout="wide")
 
@@ -16,44 +17,44 @@ geotiff_path_right = "data/app/S2B_MSIL2A_20200202T141649_N0213_R010_T20LQN_2020
 geotiff_path_right = "data/AMAZON/Training/label/S2B_MSIL2A_20200202T141649_N0213_R010_T20LQN_20200202T164215_18_10.tif"
 # geotiff_path_right = geotiff_path_left
 
-geotiff_path_left = "data/AMAZON/Training/label/S2A_MSIL2A_20200111T142701_N0213_R053_T20NQG_20200111T164651_01_07.tif"
+geotiff_path_left = "data/AMAZON/Training/image/S2A_MSIL2A_20200111T142701_N0213_R053_T20NQG_20200111T164651_01_13.tif"
 geotiff_path_right = "data/AMAZON/Training/label/S2A_MSIL2A_20200111T142701_N0213_R053_T20NQG_20200111T164651_01_13.tif"
 
 import rasterio as rio
 
-# Open the GeoTIFFs
-with rio.open(geotiff_path_left) as src:
-    print(src.profile)
-    print(src.bounds)
-    print(src.crs)
-with rio.open("data/app/S2B_MSIL2A_20200202T141649_N0213_R010_T20LQN_20200202T164215_18_10/2018-01-12/label.tif") as src:
-    print(src.profile)
-    print(src.bounds)
-    print(src.crs)
+# # Open the GeoTIFFs
+# with rio.open(geotiff_path_left) as src:
+#     print(src.profile)
+#     print(src.bounds)
+#     print(src.crs)
+# with rio.open("data/app/S2B_MSIL2A_20200202T141649_N0213_R010_T20LQN_20200202T164215_18_10/2018-01-12/label.tif") as src:
+#     print(src.profile)
+#     print(src.bounds)
+#     print(src.crs)
 
 # Adding GeoTIFF layers to the map
 m.add_raster(
     geotiff_path_left,
-    layer_name="Left Layer",
+    layer_name="Satelite Image",
     palette="viridis",
-    opacity=0.7
+    opacity=1.0,
+    bands=[2],
+    # colormap="terrain",
 )
 
 m.add_raster(
     geotiff_path_right,
     layer_name="Right Layer",
     palette="viridis",
-    opacity=0.7
+    opacity=1.0,
 )
 
-# Use split_map to display both GeoTIFFs side by side
-m.split_map(left_layer="Left Layer", right_layer="Right Layer")
+m.split_map(left_layer="Satelite Image", right_layer="Satelite Image")
 
-# Optionally add a legend (customize as needed)
-m.add_legend(title='Sample Legend', legend_dict={'Low': 'green', 'Medium': 'yellow', 'High': 'red'})
-
-# Display the map in Streamlit
 m.to_streamlit(height=700)
+
+if st.button("Save Polygon"):
+    m.save_draw_features("polygon.geojson")
 
 
 # import rasterio

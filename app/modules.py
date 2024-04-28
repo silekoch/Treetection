@@ -32,6 +32,6 @@ def plot_map(file_name):
         
 def plot_deforestation(file_name):
     df = forest_over_time(file_name)
-    st.line_chart(df, height=400, y="Forest Coverage")
-    st.line_chart(df, height=400, y="Deforestation")
+    st.line_chart(df, height=300, y="Forest Coverage")
+    st.line_chart(df, height=300, y="Deforestation")
 

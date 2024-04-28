@@ -21,11 +21,11 @@ def process_image(image, squeeze=False):
     image = (image / image.max() * 255).astype(np.uint8)
     return image
 
-def total_deforestation(name):
+def total_deforestation(name, promise=None):
     label_names = sorted(glob(f"data/app/{name}/*/label.tif"))
     if not label_names:
         return 0
-    label_start = rasterio.open(label_names[0]).read().mean()
+    label_start = promise/100 if promise else rasterio.open(label_names[0]).read().mean()
     label_end = rasterio.open(label_names[-1]).read().mean()
     # return (label_start - label_end) / label_start * 100
     return (1 - label_end / label_start) * 100
