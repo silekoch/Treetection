@@ -4,7 +4,7 @@ import rasterio
 import numpy as np
 
 class ForestCoverDataset(torch.utils.data.Dataset):
-    def __init__(self, data_dir='data/AMAZON', mode='train', one_hot_masks=False, overfitting_mode=None):
+    def __init__(self, data_dir='data/AMAZON', mode='train', one_hot_masks=False, overfitting_mode=None, NIR=False):
         if mode not in ['train', 'val', 'test']:
             raise ValueError('Invalid mode')
         
@@ -23,6 +23,7 @@ class ForestCoverDataset(torch.utils.data.Dataset):
         self.max_band_value = 2000
 
         self.one_hot_masks = one_hot_masks
+        self.NIR = NIR
 
         if overfitting_mode == 'sample':
             self.image_paths = get_file_paths(self.image_dir)[:1]
@@ -36,15 +37,15 @@ class ForestCoverDataset(torch.utils.data.Dataset):
     def __getitem__(self, i):
         image_path = self.image_paths[i]
         with rasterio.open(image_path) as src:
-            # Read the raster bands
-            red_band = src.read(1)
-            green_band = src.read(2)
-            blue_band = src.read(3)
+            # Read the rgb bands
+            bands = [src.read(1), src.read(2), src.read(3)]
+            if self.NIR:
+                bands.append(src.read(4))
 
-            # Combine the bands into one rgb image
-            rgb_array = np.array([red_band, green_band, blue_band], dtype=np.float32)
+            # Combine the bands into one image
+            image_array = np.array(bands, dtype=np.float32)
             image = clip_and_normalize_image(
-                rgb_array, self.min_band_value, self.max_band_value)
+                image_array, self.min_band_value, self.max_band_value)
 
         mask_path = self.mask_dir + '/' + image_path.split('/')[-1]
         with rasterio.open(mask_path) as src:
