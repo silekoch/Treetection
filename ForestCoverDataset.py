@@ -1,9 +1,10 @@
 import torch
+from torch.utils.data import Dataset
 from utils import get_file_paths, clip_and_normalize_image, one_hot_encode
 import rasterio
 import numpy as np
 
-class ForestCoverDataset(torch.utils.data.Dataset):
+class ForestCoverDataset(Dataset):
     def __init__(self, data_dir='data/AMAZON', mode='train', one_hot_masks=False, overfitting_mode=None, NIR=False):
         if mode not in ['train', 'val', 'test']:
             raise ValueError('Invalid mode')
