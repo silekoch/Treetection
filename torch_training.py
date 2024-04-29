@@ -78,7 +78,7 @@ if __name__ == '__main__':
     optimizer = optim.Adam(model.parameters(), lr=0.001)
 
     # Training loop
-    num_epochs = 7  # Set the number of epochs
+    num_epochs = 6  # Set the number of epochs
 
     metric_iou = torchmetrics.classification.BinaryJaccardIndex().to(device)
     metric_f1 = torchmetrics.classification.BinaryF1Score().to(device)
@@ -93,6 +93,7 @@ if __name__ == '__main__':
         print(f'Epoch {epoch+1}/{num_epochs}')        
         train_one_epoch(model, train_loader, optimizer, criterion, device, metrics)
         validate(model, val_loader, criterion, device, metrics)
+        torch.save(model.state_dict(), f'model_{epoch}.pth')
         print('-' * 10)
 
     # Save the model
